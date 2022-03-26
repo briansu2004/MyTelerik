@@ -8,6 +8,18 @@ Telerik.UI.for.Blazor 3.1.0
 
 ### AutoComplete
 
+#### Usage
+
+To use a Telerik AutoComplete for Blazor
+
+- add the TelerikAutoComplete tag
+- populate its Data property with the collection of items you want in the dropdown
+- (optional) enable features like filtering and clear button
+
+AutoComplete two-way value binding, main features and simple data binding.
+
+#### Troubleshooting
+
 Error:
 
 ```

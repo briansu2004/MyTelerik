@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Json;
 using TelerikAutoComplete_simple.Dto;
 
 namespace TelerikAutoComplete_simple.Services
