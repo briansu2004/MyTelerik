@@ -1,0 +1,194 @@
+﻿@using TelerikAutoComplete_simple.Dto
+@using TelerikAutoComplete_simple.Services
+@page "/autocomplete"
+
+@inject HttpClient http
+
+User input: @TheValue
+<br />
+<TelerikAutoComplete Data="@Suggestions" @bind-Value="@TheValue"
+    Placeholder="Enter your role (can be free text)" ClearButton="true" />
+
+
+<div class="demo-section k-form k-form-vertical">
+    <div class="k-form-field">
+        <label for="state-autocomplete" class="k-label k-form-label">Category</label>
+        <div class="k-form-field-wrap">
+            <TelerikAutoComplete Data="@Categories"
+                                 Value="@SelectedCategory"
+                                 Placeholder="Enter a category, e.g., Beverages"
+                                 ValueChanged="@((string c) => CategorySelected(c))"
+                                 ValueField="@nameof(CategoryDto.CategoryName)"
+                                 Id="category-autocomplete"
+                                 Width="100%">
+            </TelerikAutoComplete>
+        </div>
+    </div>
+    <div class="k-form-field">
+        <label class="k-label k-form-label">Product</label>
+        <div class="k-form-field-wrap">
+            <TelerikAutoComplete Data="@FilteredProducts"
+                                 @bind-Value="@SelectedProduct"
+                                 Placeholder="Enter a product from the category"
+                                 Enabled="@(!string.IsNullOrEmpty(SelectedCategory))"
+                                 ValueField="@nameof(ProductDto.ProductName)"
+                                 Id="products-autocomplete"
+                                 Width="100%">
+            </TelerikAutoComplete>
+        </div>
+    </div>
+
+    <div class="mt-lg">
+        <h6 class="kd-demo-heading">Product Information:</h6>
+        <div>
+            <label class="lbl-text">Category:</label>
+            <span class="text-bold">@SelectedCategory</span>
+        </div>
+        <div>
+            <label class="lbl-text">Product:</label>
+            <span class="text-bold">@SelectedProduct</span>
+        </div>
+    </div>
+</div>
+
+@code {
+    //Current value is null (no item is sellected) which allows the Placeholder to be displayed.
+    string TheValue { get; set; }
+
+    List<string> Suggestions { get; set; } = new List<string> {
+        "Manager", "Developer", "QA", "Technical Writer", "Support Engineer", "Sales Agent", "Architect", "Designer"
+    };
+
+    private CategoryService _categoryService;
+    private CategoryService categoryService
+    {
+        get
+        {
+            if(_categoryService == null)
+            {
+                _categoryService = new CategoryService(http);
+            }
+
+            return _categoryService;
+        }
+    }
+    private ProductService _productService;
+    private ProductService productService
+    {
+        get
+        {
+            if(_productService == null)
+            {
+                _productService = new ProductService(http);
+            }
+
+            return _productService;
+        }
+    }
+    public string SelectedCategory { get; set; }
+    public string SelectedProduct { get; set; }
+
+    public IEnumerable<CategoryDto> Categories { get; set; }
+    public IEnumerable<ProductDto> Products { get; set; }
+    public IEnumerable<ProductDto> FilteredProducts { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        Products = await productService.GetProducts();
+        Categories = await categoryService.GetCategories();
+    }
+
+    void CategorySelected(string category)
+    {
+        if (string.IsNullOrWhiteSpace(category))
+        {
+            SelectedCategory = string.Empty;
+            return;
+        }
+
+        FilteredProducts = Products.Where(p => p.CategoryName.Equals(SelectedCategory));
+        SelectedCategory = category;
+    }
+}
+
+<style>
+    .box {
+        margin: 4.5em 7.5em;
+        padding: 3em;
+        background-color: rgba(20,53,80,0.038);
+        border: 1px solid rgba(20,53,80,0.05);
+    }
+
+    .demo-section {
+        margin: 0 auto;
+        padding: 3em;
+        border: 1px solid rgba(20,53,80,0.14);
+        box-shadow: 0 1px 2px 1px rgba(0,0,0,.08), 0 3px 6px rgba(0,0,0,.08);
+    }
+
+    .auto {
+        max-width: max-content;
+    }
+
+    .demo-section:not(.wide):not(.auto),
+    .box:not(.wide):not(.auto) {
+        max-width: 500px;
+    }
+
+    .box:after,
+    .demo-section:after {
+        content: ";
+        display: block;
+        clear: both;
+        height: 0;
+    }
+
+    .box {
+        margin: 4.5em auto;
+    }
+
+    .box:first-child {
+        margin-top: 0;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+    .demo-section.editor {
+        max-width: 100%;
+        border: none;
+    }
+    .demo-alert {
+        font: normal 18px "Metric";
+        border-radius: 2px;
+        margin: 20px auto 40px auto;
+        padding: 20px;
+        border-left: 4px solid;
+    }
+
+    .demo-alert-success {
+        border-left-color: rgb(55,180,0);
+        background: rgba(55,180,0, 0.1);
+    }
+
+    .demo-alert-info {
+        border-left-color: rgb(83,146,228);
+        background: rgba(83,146,228, 0.1);
+    }
+
+    .demo-alert-error {
+        border-left-color: rgb(243, 23, 0);
+        background: rgba(243, 23, 0, 0.1);
+    }
+
+    .demo-alert-warning {
+        border-left-color: rgb(255, 192, 0);
+        background: rgba(255, 192, 0, 0.1);
+    }
+</style>

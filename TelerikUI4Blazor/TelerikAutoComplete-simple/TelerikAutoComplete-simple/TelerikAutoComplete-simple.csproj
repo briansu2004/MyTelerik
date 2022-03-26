@@ -65,4 +65,8 @@
 		<Content Remove="Properties\launchSettings.json" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="Telerik.UI.for.Blazor.Trial" Version="3.1.0" />
+	</ItemGroup>
+
 </Project>
