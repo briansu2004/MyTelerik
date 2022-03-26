@@ -2,6 +2,73 @@
 
 My Telerik
 
+## Telerik UI for MAUI Blazor
+
+Telerik.UI.for.Blazor 3.1.0
+
+### How to add Telerik UI for MAUI Blazor compnoents (.Net 6)
+
+1. NuGet
+
+One of these ways -
+
+- VS Add NuGet packages
+
+- `nuget.config`
+
+- `dotnet` CLI
+
+2. Add to VS Blazor projects
+
+https://docs.telerik.com/blazor-ui/getting-started/server-blazor
+
+`~/Pages/_Layout.cshtml`
+
+```
+<head>
+    <script src="_content/Telerik.UI.for.Blazor.Trial/js/telerik-blazor.js" defer></script>
+    <link rel="stylesheet" href="_content/Telerik.UI.for.Blazor.Trial/css/kendo-theme-default/all.css" />
+</head>
+```
+
+`~/Program.cs`
+
+```
+builder.Services.AddScoped(sp => new HttpClient {});
+builder.Services.AddTelerikBlazor();
+```
+
+`~/_Imports.razor`
+
+```
+@using Telerik.Blazor
+@using Telerik.Blazor.Components
+```
+
+`~/Shared/TelerikLayout.razor`
+
+```
+@inherits LayoutComponentBase
+
+<TelerikRootComponent>
+    @Body
+</TelerikRootComponent>
+```
+
+`~/Shared/MainLayout.razor`
+
+```
+@layout TelerikLayout
+@inherits LayoutComponentBase
+```
+
+3. Add Telerik Components to the Views
+
+```
+<TelerikAutoComplete ...>
+...
+```
+
 ## Telerik UI for Blazor
 
 Telerik.UI.for.Blazor 3.1.0
@@ -10,13 +77,15 @@ Telerik.UI.for.Blazor 3.1.0
 
 1. NuGet
 
-`dotnet` CLI
+One of these ways -
 
-`nuget.config`
+- VS Add NuGet packages
 
-VS Add NuGet packages
+- `nuget.config`
 
-2. Add to Blazor project in VS
+- `dotnet` CLI
+
+2. Add to VS Blazor projects
 
 https://docs.telerik.com/blazor-ui/getting-started/server-blazor
 
@@ -79,30 +148,10 @@ To use a Telerik AutoComplete for Blazor
 
 AutoComplete two-way value binding, main features and simple data binding.
 
-#### Troubleshooting
-
-Error:
-
-```
-Error (active) RZ9991 The attribute names could not be inferred from bind attribute 'bind-Value'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
-```
-
-Solution:
+### Catches
 
 `@bind-Value="@SelectedProduct"`
 
-to
+not
 
 `bind-value="@SelectedProduct"`
-
-Error:
-
-```
-There is no registered service of type 'System.Net.Http.HttpClient'.
-```
-
-Solution:
-
-```
-builder.Services.AddScoped(sp => new HttpClient {});
-```
